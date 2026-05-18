@@ -1,0 +1,128 @@
+default_config:
+
+mqtt:
+  sensor:
+    - name: "Nivel Tanque Principal"
+      state_topic: "feedlot/tanque/nivel"
+      unit_of_measurement: "%"
+      icon: "mdi:water-percent"
+
+    - name: "Estado Red Eléctrica"
+      state_topic: "feedlot/energia/red_220v"
+      icon: "mdi:transmission-tower"
+
+    - name: "Tensión Batería"
+      state_topic: "feedlot/energia/bateria_v"
+      unit_of_measurement: "V"
+      icon: "mdi:battery"
+
+    - name: "Temperatura Ambiente"
+      state_topic: "feedlot/ambiental/temperatura"
+      unit_of_measurement: "°C"
+      icon: "mdi:thermometer"
+
+    - name: "Humedad Ambiente"
+      state_topic: "feedlot/ambiental/humedad"
+      unit_of_measurement: "%"
+      icon: "mdi:water-percent"
+
+    - name: "Bebedero Corral 1"
+      state_topic: "feedlot/bebederos/corral_1"
+      icon: "mdi:cow"
+
+    - name: "Alerta Bebedero Corral 1"
+      state_topic: "feedlot/bebederos/corral_1/alerta"
+      icon: "mdi:alert"
+
+    - name: "Bebedero Corral 2"
+      state_topic: "feedlot/bebederos/corral_2"
+      icon: "mdi:cow"
+
+    - name: "Alerta Bebedero Corral 2"
+      state_topic: "feedlot/bebederos/corral_2/alerta"
+      icon: "mdi:alert"
+
+    - name: "Bebedero Corral 3"
+      state_topic: "feedlot/bebederos/corral_3"
+      icon: "mdi:cow"
+
+    - name: "Alerta Bebedero Corral 3"
+      state_topic: "feedlot/bebederos/corral_3/alerta"
+      icon: "mdi:alert"
+
+    - name: "Alerta Crítica"
+      state_topic: "feedlot/alertas/critica"
+      icon: "mdi:alert-circle"
+
+    - name: "Alerta Advertencia"
+      state_topic: "feedlot/alertas/advertencia"
+      icon: "mdi:alert"
+
+  switch:
+    - name: "Bomba de Agua"
+      state_topic: "feedlot/tanque/bomba/estado"
+      command_topic: "feedlot/tanque/bomba/set"
+      payload_on: "ON"
+      payload_off: "OFF"
+      optimistic: false
+      icon: "mdi:water-pump"
+
+    - name: "Relé Batería Electrificador"
+      state_topic: "feedlot/energia/rele_bateria/estado"
+      command_topic: "feedlot/energia/rele_bateria/set"
+      payload_on: "ON"
+      payload_off: "OFF"
+      optimistic: false
+      icon: "mdi:lightning-bolt"
+
+    - name: "Relé Cargador Batería"
+      state_topic: "feedlot/energia/rele_cargador/estado"
+      command_topic: "feedlot/energia/rele_cargador/set"
+      payload_on: "ON"
+      payload_off: "OFF"
+      optimistic: false
+      icon: "mdi:battery-charging"
+
+    - name: "Iluminación Manga"
+      state_topic: "feedlot/iluminacion/manga/estado"
+      command_topic: "feedlot/iluminacion/manga/set"
+      payload_on: "ON"
+      payload_off: "OFF"
+      icon: "mdi:floodlight"
+
+template:
+  - binary_sensor:
+      - name: "Corte Eléctrico"
+        state: "{{ states('sensor.estado_red_electrica') == 'CORTE' }}"
+        device_class: problem
+        icon: "mdi:power-plug-off"
+
+      - name: "Nivel Tanque Bajo"
+        state: "{{ states('sensor.nivel_tanque_principal') | int(0) < 20 }}"
+        device_class: problem
+        icon: "mdi:water-alert"
+
+      - name: "Batería Baja"
+        state: "{{ states('sensor.tension_bateria') | float(0) < 12.0 }}"
+        device_class: battery
+        icon: "mdi:battery-alert"
+
+      - name: "Temperatura Alta"
+        state: "{{ states('sensor.temperatura_ambiente') | float(0) > 38 }}"
+        device_class: heat
+        icon: "mdi:thermometer-alert"
+
+      - name: "Bebedero Corral 1 Vacío"
+        state: "{{ states('sensor.alerta_bebedero_corral_1') == 'ALERTA' }}"
+        device_class: problem
+        icon: "mdi:cow"
+
+      - name: "Bebedero Corral 2 Vacío"
+        state: "{{ states('sensor.alerta_bebedero_corral_2') == 'ALERTA' }}"
+        device_class: problem
+        icon: "mdi:cow"
+
+      - name: "Bebedero Corral 3 Vacío"
+        state: "{{ states('sensor.alerta_bebedero_corral_3') == 'ALERTA' }}"
+        device_class: problem
+        icon: "mdi:cow"

@@ -1,0 +1,6 @@
+influxdb_data/
+nodered_data/
+mosquitto/data/
+ha_config/.storage/
+ha_config/home-assistant.log
+ha_config/*.db
