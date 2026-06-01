@@ -1,5 +1,37 @@
 default_config:
 
+automation: !include automations.yaml
+
+input_boolean:
+  alerta_corte_activa:
+    name: Alerta corte activa
+    initial: false
+  alerta_tanque_activa:
+    name: Alerta tanque activa
+    initial: false
+  alerta_bateria_activa:
+    name: Alerta bateria activa
+    initial: false
+
+notify:
+  - name: email_feedlot
+    platform: smtp
+    server: smtp.gmail.com
+    port: 587
+    timeout: 15
+    sender: boccosanti39@gmail.com
+    encryption: starttls
+    username: boccosanti39@gmail.com
+    password: "hochjbbdvkexzbzg"
+    recipient:
+      - boccosanti39@gmail.com
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 100.64.0.0/10
+  ip_ban_enabled: false
+
 mqtt:
   sensor:
     - name: "Nivel Tanque Principal"

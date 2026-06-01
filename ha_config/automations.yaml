@@ -1,0 +1,210 @@
+- id: '1779134219872'
+  alias: Encender luces manga
+  triggers:
+  - trigger: time
+    at: '20:00:00'
+  conditions: []
+  actions:
+  - action: mqtt.publish
+    data:
+      topic: feedlot/iluminacion/manga/set
+      payload: 'ON'
+  mode: single
+- id: '1779134221405'
+  alias: Apagar luces manga
+  triggers:
+  - trigger: time
+    at: 06:00:00
+  conditions: []
+  actions:
+  - action: mqtt.publish
+    data:
+      topic: feedlot/iluminacion/manga/set
+      payload: 'OFF'
+  mode: single
+- id: '1779301070601'
+  alias: Alerta corte eléctrico
+  triggers:
+  - trigger: mqtt
+    options:
+      topic: feedlot/energia/red_220v
+      payload: CORTE
+  conditions:
+  - condition: state
+    entity_id: input_boolean.alerta_corte_activa
+    state: 'off'
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_corte_activa
+  - action: persistent_notification.create
+    data:
+      message: Se cortó el suministro de 220V en el feedlot
+      title: ⚡ Corte eléctrico
+      notification_id: alerta_corte_electrico
+  - action: telegram_bot.send_message
+    data:
+      target: 1185960621
+      message: ⚡ Corte eléctrico en el feedlot — Se cortó el suministro de 220V
+  - action: notify.mobile_app_iphone1
+    metadata: {}
+    data:
+      message: corte electrico
+      title: CORTE ELECTRICO
+  mode: single
+- id: '1779301070602'
+  alias: Alerta bebedero corral 1
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_1/alerta
+    payload: ALERTA
+  conditions: []
+  actions:
+  - action: persistent_notification.create
+    data:
+      message: El bebedero del corral 1 está vacío
+      title: ⚠️ Bebedero Corral 1
+      notification_id: alerta_bebedero_1
+  - action: telegram_bot.send_message
+    data:
+      target: 1185960621
+      message: ⚠️ Bebedero Corral 1 vacío en el feedlot
+  mode: single
+- id: '1779301070603'
+  alias: Alerta bebedero corral 2
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_2/alerta
+    payload: ALERTA
+  conditions: []
+  actions:
+  - action: persistent_notification.create
+    data:
+      message: El bebedero del corral 2 está vacío
+      title: ⚠️ Bebedero Corral 2
+      notification_id: alerta_bebedero_2
+  - action: telegram_bot.send_message
+    data:
+      target: 1185960621
+      message: ⚠️ Bebedero Corral 2 vacío en el feedlot
+  mode: single
+- id: '1779301070604'
+  alias: Alerta bebedero corral 3
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_3/alerta
+    payload: ALERTA
+  conditions: []
+  actions:
+  - action: persistent_notification.create
+    data:
+      message: El bebedero del corral 3 está vacío
+      title: ⚠️ Bebedero Corral 3
+      notification_id: alerta_bebedero_3
+  - action: telegram_bot.send_message
+    data:
+      target: 1185960621
+      message: ⚠️ Bebedero Corral 3 vacío en el feedlot
+  mode: single
+- id: '1779301070605'
+  alias: Alerta nivel tanque bajo
+  description: ''
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/tanque/nivel
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.payload | float(0) < 20 }}'
+  - condition: state
+    entity_id: input_boolean.alerta_tanque_activa
+    state: 'off'
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_tanque_activa
+  - action: notify.mobile_app_cph2655
+    metadata: {}
+    data:
+      title: NIVEL TANQUE BAJO
+      message: El nivel del tanque esta por de bajo del 20%
+  - action: notify.mobile_app_iphone1
+    metadata: {}
+    data:
+      message: El nivel del tanque esta por de bajo del 20%
+      title: NIVEL TANQUE BAJO
+  - action: notify.mobile_app_eltacho
+    metadata: {}
+    data:
+      message: El nivel del tanque esta por de bajo del 20%
+      title: NIVEL TANQUE BAJO
+  mode: single
+- id: '1779301070610'
+  alias: Reset alerta corte al volver la red
+  triggers:
+  - trigger: mqtt
+    options:
+      topic: feedlot/energia/red_220v
+      payload: OK
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_corte_activa
+  mode: single
+- id: '1779301070611'
+  alias: Reset alerta tanque al subir nivel
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/tanque/nivel
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.payload | float(0) >= 20 }}'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_tanque_activa
+  mode: single
+- id: '1779301070620'
+  alias: Alerta batería baja
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/energia/bateria_v
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.payload | float(0) < 10 }}'
+  - condition: state
+    entity_id: input_boolean.alerta_bateria_activa
+    state: 'off'
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_bateria_activa
+  - action: notify.mobile_app_cph2655
+    metadata: {}
+    data:
+      message: El nivel de voltaje de la bateria esta bajo
+      title: BATERIA NO ESTA CARGANDO
+  - action: notify.mobile_app_iphone1
+    metadata: {}
+    data:
+      message: El nivel de voltaje de la bateria esta bajo
+      title: BATERÍA NO ESTA CARGANDO
+  - action: notify.mobile_app_eltacho
+    metadata: {}
+    data:
+      message: El nivel de voltaje de la batería esta bajo
+      title: BATERÍA NO ESTA CARGANDO
+  mode: single
+- id: '1779301070621'
+  alias: Reset alerta batería al subir voltaje
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/energia/bateria_v
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.payload | float(0) >= 10 }}'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_bateria_activa
+  mode: single
