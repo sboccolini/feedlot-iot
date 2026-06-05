@@ -58,8 +58,14 @@
   - trigger: mqtt
     topic: feedlot/bebederos/corral_1/alerta
     payload: ALERTA
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.alerta_bebedero_1_activa
+    state: 'off'
   actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_bebedero_1_activa
   - action: persistent_notification.create
     data:
       message: El bebedero del corral 1 está vacío
@@ -69,6 +75,18 @@
     data:
       target: 1185960621
       message: ⚠️ Bebedero Corral 1 vacío en el feedlot
+  - action: notify.mobile_app_cph2655
+    data:
+      title: ⚠️ Bebedero Corral 1
+      message: El bebedero del corral 1 está vacío
+  - action: notify.mobile_app_eltacho
+    data:
+      title: ⚠️ Bebedero Corral 1
+      message: El bebedero del corral 1 está vacío
+  - action: notify.mobile_app_iphone1
+    data:
+      title: ⚠️ Bebedero Corral 1
+      message: El bebedero del corral 1 está vacío
   mode: single
 - id: '1779301070603'
   alias: Alerta bebedero corral 2
@@ -76,8 +94,14 @@
   - trigger: mqtt
     topic: feedlot/bebederos/corral_2/alerta
     payload: ALERTA
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.alerta_bebedero_2_activa
+    state: 'off'
   actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_bebedero_2_activa
   - action: persistent_notification.create
     data:
       message: El bebedero del corral 2 está vacío
@@ -87,6 +111,18 @@
     data:
       target: 1185960621
       message: ⚠️ Bebedero Corral 2 vacío en el feedlot
+  - action: notify.mobile_app_cph2655
+    data:
+      title: ⚠️ Bebedero Corral 2
+      message: El bebedero del corral 2 está vacío
+  - action: notify.mobile_app_eltacho
+    data:
+      title: ⚠️ Bebedero Corral 2
+      message: El bebedero del corral 2 está vacío
+  - action: notify.mobile_app_iphone1
+    data:
+      title: ⚠️ Bebedero Corral 2
+      message: El bebedero del corral 2 está vacío
   mode: single
 - id: '1779301070604'
   alias: Alerta bebedero corral 3
@@ -94,8 +130,14 @@
   - trigger: mqtt
     topic: feedlot/bebederos/corral_3/alerta
     payload: ALERTA
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.alerta_bebedero_3_activa
+    state: 'off'
   actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.alerta_bebedero_3_activa
   - action: persistent_notification.create
     data:
       message: El bebedero del corral 3 está vacío
@@ -105,6 +147,18 @@
     data:
       target: 1185960621
       message: ⚠️ Bebedero Corral 3 vacío en el feedlot
+  - action: notify.mobile_app_cph2655
+    data:
+      title: ⚠️ Bebedero Corral 3
+      message: El bebedero del corral 3 está vacío
+  - action: notify.mobile_app_eltacho
+    data:
+      title: ⚠️ Bebedero Corral 3
+      message: El bebedero del corral 3 está vacío
+  - action: notify.mobile_app_iphone1
+    data:
+      title: ⚠️ Bebedero Corral 3
+      message: El bebedero del corral 3 está vacío
   mode: single
 - id: '1779301070605'
   alias: Alerta nivel tanque bajo
@@ -207,4 +261,40 @@
   - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.alerta_bateria_activa
+  mode: single
+
+- id: '1779301070630'
+  alias: Reset alerta bebedero 1
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_1/alerta
+    payload: OK
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_bebedero_1_activa
+  mode: single
+
+- id: '1779301070631'
+  alias: Reset alerta bebedero 2
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_2/alerta
+    payload: OK
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_bebedero_2_activa
+  mode: single
+
+- id: '1779301070632'
+  alias: Reset alerta bebedero 3
+  triggers:
+  - trigger: mqtt
+    topic: feedlot/bebederos/corral_3/alerta
+    payload: OK
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.alerta_bebedero_3_activa
   mode: single

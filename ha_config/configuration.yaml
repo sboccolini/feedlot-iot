@@ -12,6 +12,15 @@ input_boolean:
   alerta_bateria_activa:
     name: Alerta bateria activa
     initial: false
+  alerta_bebedero_1_activa:
+    name: Alerta bebedero 1 activa
+    initial: false
+  alerta_bebedero_2_activa:
+    name: Alerta bebedero 2 activa
+    initial: false
+  alerta_bebedero_3_activa:
+    name: Alerta bebedero 3 activa
+    initial: false
 
 notify:
   - name: email_feedlot
