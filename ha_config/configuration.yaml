@@ -28,12 +28,12 @@ notify:
     server: smtp.gmail.com
     port: 587
     timeout: 15
-    sender: boccosanti39@gmail.com
+    sender: TU_EMAIL@gmail.com
     encryption: starttls
-    username: boccosanti39@gmail.com
-    password: "hochjbbdvkexzbzg"
+    username: TU_EMAIL@gmail.com
+    password: "TU_APP_PASSWORD_16_CHARS"
     recipient:
-      - boccosanti39@gmail.com
+      - TU_EMAIL@gmail.com
 
 http:
   use_x_forwarded_for: true

@@ -44,7 +44,7 @@
       notification_id: alerta_corte_electrico
   - action: telegram_bot.send_message
     data:
-      target: 1185960621
+      target: TU_CHAT_ID
       message: ⚡ Corte eléctrico en el feedlot — Se cortó el suministro de 220V
   - action: notify.mobile_app_iphone1
     metadata: {}
@@ -73,7 +73,7 @@
       notification_id: alerta_bebedero_1
   - action: telegram_bot.send_message
     data:
-      target: 1185960621
+      target: TU_CHAT_ID
       message: ⚠️ Bebedero Corral 1 vacío en el feedlot
   - action: notify.mobile_app_cph2655
     data:
@@ -109,7 +109,7 @@
       notification_id: alerta_bebedero_2
   - action: telegram_bot.send_message
     data:
-      target: 1185960621
+      target: TU_CHAT_ID
       message: ⚠️ Bebedero Corral 2 vacío en el feedlot
   - action: notify.mobile_app_cph2655
     data:
@@ -145,7 +145,7 @@
       notification_id: alerta_bebedero_3
   - action: telegram_bot.send_message
     data:
-      target: 1185960621
+      target: TU_CHAT_ID
       message: ⚠️ Bebedero Corral 3 vacío en el feedlot
   - action: notify.mobile_app_cph2655
     data:
