@@ -1,27 +1,3 @@
-- id: '1779134219872'
-  alias: Encender luces manga
-  triggers:
-  - trigger: time
-    at: '20:00:00'
-  conditions: []
-  actions:
-  - action: mqtt.publish
-    data:
-      topic: feedlot/iluminacion/manga/set
-      payload: 'ON'
-  mode: single
-- id: '1779134221405'
-  alias: Apagar luces manga
-  triggers:
-  - trigger: time
-    at: 06:00:00
-  conditions: []
-  actions:
-  - action: mqtt.publish
-    data:
-      topic: feedlot/iluminacion/manga/set
-      payload: 'OFF'
-  mode: single
 - id: '1779301070601'
   alias: Alerta corte eléctrico
   triggers:

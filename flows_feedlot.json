@@ -1,1 +1,257 @@
-[{"id":"mqtt-tanque-in","type":"mqtt in","name":"Nivel Tanque","topic":"feedlot/tanque/nivel","broker":"broker-local","x":120,"y":100,"wires":[["fn-tanque"]]},{"id":"fn-tanque","type":"function","name":"Control Bomba","func":"const nivel = parseFloat(msg.payload);\nif (nivel <= 20) {\n    msg.payload = 'ON';\n} else if (nivel >= 95) {\n    msg.payload = 'OFF';\n} else {\n    return null;\n}\nreturn msg;","outputs":1,"x":340,"y":100,"wires":[["mqtt-bomba-out"]]},{"id":"mqtt-bomba-out","type":"mqtt out","name":"Bomba Set","topic":"feedlot/tanque/bomba/set","broker":"broker-local","x":560,"y":100,"wires":[]},{"id":"mqtt-red-in","type":"mqtt in","name":"Estado Red","topic":"feedlot/energia/red_220v","broker":"broker-local","x":120,"y":220,"wires":[["fn-red"]]},{"id":"fn-red","type":"function","name":"Control Batería","func":"if (msg.payload === 'CORTE') {\n    flow.set('red_ok', false);\n    msg.payload = 'ON';\n} else {\n    flow.set('red_ok', true);\n    msg.payload = 'OFF';\n}\nreturn msg;","outputs":1,"x":340,"y":220,"wires":[["mqtt-bateria-out"]]},{"id":"mqtt-bateria-out","type":"mqtt out","name":"Relé Batería Set","topic":"feedlot/energia/rele_bateria/set","broker":"broker-local","x":560,"y":220,"wires":[]},{"id":"mqtt-batv-in","type":"mqtt in","name":"Voltaje Batería","topic":"feedlot/energia/bateria_v","broker":"broker-local","x":120,"y":340,"wires":[["fn-cargador"]]},{"id":"fn-cargador","type":"function","name":"Control Cargador","func":"const redOk = flow.get('red_ok') || false;\nconst v = parseFloat(msg.payload);\nif (!redOk) return null;\nconst cargando = flow.get('cargando') || false;\nif (v < 12.0) {\n    flow.set('cargando', true);\n    msg.payload = 'ON';\n} else if (v >= 12.6 && cargando) {\n    flow.set('cargando', false);\n    msg.payload = 'OFF';\n} else {\n    return null;\n}\nreturn msg;","outputs":1,"x":340,"y":340,"wires":[["mqtt-cargador-out"]]},{"id":"mqtt-cargador-out","type":"mqtt out","name":"Relé Cargador Set","topic":"feedlot/energia/rele_cargador/set","broker":"broker-local","x":560,"y":340,"wires":[]},{"id":"broker-local","type":"mqtt-broker","name":"Broker Feedlot","broker":"localhost","port":"1883","clientid":"nodered-feedlot","usetls":false,"compatmode":false,"keepalive":"60","cleansession":true}]
+[
+    {
+        "id": "d8936887b2be8f5f",
+        "type": "tab",
+        "label": "Flujo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "broker-local",
+        "type": "mqtt-broker",
+        "name": "Broker Feedlot",
+        "broker": "172.21.0.2",
+        "port": "1883",
+        "clientid": "nodered-feedlot",
+        "autoConnect": true,
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": 4,
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "mqtt-tanque-in",
+        "type": "mqtt in",
+        "z": "d8936887b2be8f5f",
+        "name": "Nivel Tanque",
+        "topic": "feedlot/tanque/nivel",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "broker-local",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 270,
+        "y": 140,
+        "wires": [
+            [
+                "fn-tanque"
+            ]
+        ]
+    },
+    {
+        "id": "fn-tanque",
+        "type": "function",
+        "z": "d8936887b2be8f5f",
+        "name": "Control Bomba",
+        "func": "const nivel = parseFloat(msg.payload);\nif (nivel <= 20) {\n    msg.payload = 'ON';\n} else if (nivel >= 95) {\n    msg.payload = 'OFF';\n} else {\n    return null;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "mqtt-bomba-out"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt-bomba-out",
+        "type": "mqtt out",
+        "z": "d8936887b2be8f5f",
+        "name": "Bomba Set",
+        "topic": "feedlot/tanque/bomba/set",
+        "broker": "broker-local",
+        "x": 710,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "mqtt-red-in",
+        "type": "mqtt in",
+        "z": "d8936887b2be8f5f",
+        "name": "Estado Red",
+        "topic": "feedlot/energia/red_220v",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "broker-local",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 270,
+        "y": 260,
+        "wires": [
+            [
+                "fn-red"
+            ]
+        ]
+    },
+    {
+        "id": "fn-red",
+        "type": "function",
+        "z": "d8936887b2be8f5f",
+        "name": "Control Batería",
+        "func": "if (msg.payload === 'CORTE') {\n    flow.set('red_ok', false);\n    msg.payload = 'ON';\n} else {\n    flow.set('red_ok', true);\n    msg.payload = 'OFF';\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "mqtt-bateria-out"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt-bateria-out",
+        "type": "mqtt out",
+        "z": "d8936887b2be8f5f",
+        "name": "Relé Batería Set",
+        "topic": "feedlot/energia/rele_bateria/set",
+        "broker": "broker-local",
+        "x": 710,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "mqtt-batv-in",
+        "type": "mqtt in",
+        "z": "d8936887b2be8f5f",
+        "name": "Voltaje Batería",
+        "topic": "feedlot/energia/bateria_v",
+        "broker": "broker-local",
+        "inputs": 0,
+        "x": 270,
+        "y": 380,
+        "wires": [
+            [
+                "fn-cargador"
+            ]
+        ]
+    },
+    {
+        "id": "fn-cargador",
+        "type": "function",
+        "z": "d8936887b2be8f5f",
+        "name": "Control Cargador",
+        "func": "const redOk = flow.get('red_ok') || false;\nconst v = parseFloat(msg.payload);\nif (!redOk) return null;\nconst cargando = flow.get('cargando') || false;\nif (v < 12.0) {\n    flow.set('cargando', true);\n    msg.payload = 'ON';\n} else if (v >= 12.6 && cargando) {\n    flow.set('cargando', false);\n    msg.payload = 'OFF';\n} else {\n    return null;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 380,
+        "wires": [
+            [
+                "mqtt-cargador-out"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt-cargador-out",
+        "type": "mqtt out",
+        "z": "d8936887b2be8f5f",
+        "name": "Relé Cargador Set",
+        "topic": "feedlot/energia/rele_cargador/set",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "broker-local",
+        "x": 710,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "inject-luces-on",
+        "type": "inject",
+        "z": "d8936887b2be8f5f",
+        "name": "Encender 20:00",
+        "props": [
+            {
+                "p": "payload",
+                "v": "ON",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "0 20 * * *",
+        "once": false,
+        "payload": "ON",
+        "payloadType": "str",
+        "x": 470,
+        "y": 460,
+        "wires": [
+            [
+                "mqtt-luces-out"
+            ]
+        ]
+    },
+    {
+        "id": "inject-luces-off",
+        "type": "inject",
+        "z": "d8936887b2be8f5f",
+        "name": "Apagar 06:00",
+        "props": [
+            {
+                "p": "payload",
+                "v": "OFF",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "0 6 * * *",
+        "once": false,
+        "payload": "OFF",
+        "payloadType": "str",
+        "x": 470,
+        "y": 520,
+        "wires": [
+            [
+                "mqtt-luces-out"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt-luces-out",
+        "type": "mqtt out",
+        "z": "d8936887b2be8f5f",
+        "name": "Iluminación Manga",
+        "topic": "feedlot/iluminacion/manga/set",
+        "qos": "0",
+        "retain": "",
+        "broker": "broker-local",
+        "x": 710,
+        "y": 490,
+        "wires": []
+    }
+]
